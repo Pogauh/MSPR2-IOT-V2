@@ -7,7 +7,7 @@ class WifiManagerCustom {
 public:
 
     /**
-     * @brief Initialise la connexion Wi-Fi via WiFiManager.
+     * @brief Se connecte au Wi-Fi défini dans Config.h (redémarre en cas d'échec).
      */
     void begin();
 };

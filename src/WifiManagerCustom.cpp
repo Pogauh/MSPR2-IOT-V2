@@ -1,22 +1,29 @@
 ﻿#include "WifiManagerCustom.h"
 
-#include <WiFiManager.h>
+#include <WiFi.h>
 #include <Arduino.h>
+
+#include "Config.h"
 
 void WifiManagerCustom::begin() {
 
-    WiFiManager wm;
+    // Connexion directe au réseau défini dans Config.h
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
-    // Définit le délai maximal de connexion au réseau Wi-Fi
-    wm.setConnectTimeout(30);
+    Serial.print("Connexion au WiFi ");
+    Serial.println(WIFI_SSID);
 
-    // Tente une connexion automatique ou démarre un portail de configuration
-    bool ok = wm.autoConnect("ESP32-Setup");
-
-    if (!ok) {
-        Serial.println("Echec WiFi");
-        ESP.restart();
+    unsigned long start = millis();
+    while (WiFi.status() != WL_CONNECTED) {
+        if (millis() - start > WIFI_TIMEOUT_MS) {
+            Serial.println("Echec WiFi");
+            ESP.restart();
+        }
+        delay(500);
+        Serial.print(".");
     }
+    Serial.println();
 
     // Affiche les informations de connexion
     Serial.println("WiFi connecté");
