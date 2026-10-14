@@ -160,6 +160,32 @@ constexpr char MQTT_TOPIC[] = "futurekawa/bresil/entrepot1/data";
 
 ---
 
+# Configuration du Wi-Fi (WiFiManager)
+
+Aucun identifiant Wi-Fi n'est écrit dans le code. Le réseau est saisi une seule fois via un portail captif, puis mémorisé dans la flash de l'ESP32.
+
+**Première utilisation, ou réseau mémorisé introuvable :**
+
+1. L'ESP32 tente de se connecter au réseau mémorisé pendant 30 s.
+2. En cas d'échec (ou s'il n'y a aucun réseau mémorisé), il ouvre le point d'accès `ESP32-Setup`.
+3. Se connecter à ce point d'accès avec un téléphone ou un PC : le portail s'ouvre automatiquement (sinon aller sur `192.168.4.1`).
+4. Choisir **Configure WiFi**, sélectionner le réseau, saisir le mot de passe, vérifier l'**adresse IP du broker MQTT** (pré-remplie), puis **Save**.
+5. L'ESP32 se connecte et mémorise le réseau et le broker : les démarrages suivants sont automatiques.
+
+Si personne ne configure le portail pendant 3 minutes, l'ESP32 redémarre et réessaie.
+
+**Changer de réseau alors que l'ancien est encore disponible :**
+
+1. Redémarrer l'ESP32 (bouton EN).
+2. Appuyer sur le bouton **BOOT** pendant les 3 secondes qui suivent le message `Appuyer sur BOOT pour reconfigurer le Wi-Fi...`.
+3. Le portail s'ouvre, reprendre les étapes 3 à 5 ci-dessus.
+
+**Broker MQTT :** l'adresse saisie dans le portail est mémorisée en flash, comme le réseau Wi-Fi. `MQTT_BROKER` dans `Config.h` n'est que la valeur par défaut, utilisée tant que rien n'a été saisi.
+
+**Changer uniquement le broker :** ouvrir le portail avec le bouton BOOT, laisser le réseau et le mot de passe vides, modifier l'adresse du broker, **Save**, puis redémarrer l'ESP32 (bouton EN) : la nouvelle adresse est utilisée.
+
+---
+
 # Fonctionnement
 
 Au démarrage :
@@ -171,7 +197,7 @@ Au démarrage :
 5. Initialisation des LEDs
 6. Initialisation du LCD
 
-Ensuite, toutes les **10 secondes** :
+Ensuite, toutes les **60 secondes** :
 
 - lecture du DHT11
 - affichage LCD

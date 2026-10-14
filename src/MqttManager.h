@@ -30,11 +30,24 @@ public:
      */
     bool publish(const String& payload);
 
+    /**
+     * @brief Charge l'adresse du broker MQTT depuis la mémoire persistante.
+     *
+     * @return Adresse saisie dans le portail Wi-Fi, ou MQTT_BROKER (Config.h) par défaut.
+     */
+    static String loadMQTTConfig();
+
+    /**
+     * @brief Enregistre l'adresse du broker MQTT dans la mémoire persistante.
+     *
+     * @param server Adresse IP ou nom d'hôte du broker.
+     * @return true si l'adresse est valide et enregistrée, false sinon.
+     */
+    static bool saveMQTTConfig(const String& server);
+
 private:
     WiFiClient espClient;
     PubSubClient client{espClient};
-
-    Preferences prefs;
 
     String mqttServer;
 
@@ -42,18 +55,4 @@ private:
      * @brief Établit la connexion au broker MQTT.
      */
     void connect();
-
-    /**
-     * @brief Charge l'adresse du broker MQTT depuis la mémoire persistante.
-     *
-     * @return Adresse IP ou nom d'hôte du broker.
-     */
-    String loadMQTTConfig();
-
-    /**
-     * @brief Enregistre l'adresse du broker MQTT dans la mémoire persistante.
-     *
-     * @param server Adresse IP ou nom d'hôte du broker.
-     */
-    void saveMQTTConfig(String server);
 };
